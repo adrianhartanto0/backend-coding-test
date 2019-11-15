@@ -35,15 +35,16 @@ module.exports = (db) => {
      * @apiParam (Body) {String} rider_name Rider Name.
      * @apiParam (Body) {String} driver_name Driver Name.
      * @apiParam (Body) {String} driver_vehicle Driver Vehicle.
-     *
-     * @apiSuccess {Number} rideID Unique Rider ID
-     * @apiSuccess {Number} startLat Ride Origin Latitude  
-     * @apiSuccess {Number} startLong Ride Origin Longtitude  
-     * @apiSuccess {Number} endLat Ride Destination Latitude  
-     * @apiSuccess {Number} endLong Ride Destination Longtitude      
-     * @apiSuccess {String} riderName Rider Name
-     * @apiSuccess {String} driverName Driver Name
-     * @apiSuccess {String} driverVehicle Driver Vehicle type
+     
+     * @apiSuccess {Object[]} rides List of Rides 
+     * @apiSuccess {Number} rides.rideID Unique Rider ID
+     * @apiSuccess {Number} rides.startLat Ride Origin Latitude  
+     * @apiSuccess {Number} rides.startLong Ride Origin Longtitude  
+     * @apiSuccess {Number} rides.endLat Ride Destination Latitude  
+     * @apiSuccess {Number} rides.endLong Ride Destination Longtitude      
+     * @apiSuccess {String} rides.riderName Rider Name
+     * @apiSuccess {String} rides.driverName Driver Name
+     * @apiSuccess {String} rides.driverVehicle Driver Vehicle type
      * 
      * @apiError (Error) {String} error_code Error Code
      * @apiError (Error) {String} message Error Message
@@ -183,7 +184,7 @@ module.exports = (db) => {
      * @apiName Get Rides
      * @apiGroup Ride
      *
-     * @apiSuccess {Object[]} rides Unique Rider ID
+     * @apiSuccess {Object[]} rides List of Rides
      * @apiSuccess {Number} rides.rideID Unique Rider ID
      * @apiSuccess {Number} rides.startLat Ride Origin Latitude  
      * @apiSuccess {Number} rides.startLong Ride Origin Longtitude  
@@ -258,14 +259,15 @@ module.exports = (db) => {
      *
      * @apiParam {Number} id Ride ID
      * 
-     * @apiSuccess {Number} rideID Unique Rider ID
-     * @apiSuccess {Number} startLat Ride Origin Latitude  
-     * @apiSuccess {Number} startLong Ride Origin Longtitude  
-     * @apiSuccess {Number} endLat Ride Destination Latitude  
-     * @apiSuccess {Number} endLong Ride Destination Longtitude      
-     * @apiSuccess {String} riderName Rider Name
-     * @apiSuccess {String} driverName Driver Name
-     * @apiSuccess {String} driverVehicle Driver Vehicle type
+     * @apiSuccess {Object[]} rides List of Rides 
+     * @apiSuccess {Number} rides.rideID Unique Rider ID
+     * @apiSuccess {Number} rides.startLat Ride Origin Latitude  
+     * @apiSuccess {Number} rides.startLong Ride Origin Longtitude  
+     * @apiSuccess {Number} rides.endLat Ride Destination Latitude  
+     * @apiSuccess {Number} rides.endLong Ride Destination Longtitude      
+     * @apiSuccess {String} rides.riderName Rider Name
+     * @apiSuccess {String} rides.driverName Driver Name
+     * @apiSuccess {String} rides.driverVehicle Driver Vehicle type
      * 
      * @apiError (Error) {String} error_code Error Code
      * @apiError (Error) {String} message Error Message
