@@ -1,4 +1,10 @@
+require('dotenv').config();
+
 const { series } = require('nps-utils');
+
+const surgeCommand = process.env.API_WEBSITE_URL.length !== 0 ? 
+  `surge ./doc -d {process.env.API_WEBSITE_URL}` :
+  `surge ./doc`;
 
 module.exports = {
   scripts: {
@@ -10,7 +16,7 @@ module.exports = {
       },
       deploy: {
         description: 'Deploy the docs to surge.',
-        script: series('nps doc.generate', 'surge ./doc'),
+        script: series('nps doc.generate', surgeCommand),
       },
     },
   }
