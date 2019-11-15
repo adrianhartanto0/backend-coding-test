@@ -56,10 +56,10 @@ module.exports = (db) => {
      * [
      *   {
      *      rideId: 1,
-     *      startLat: 90.23456789,
-     *      startLong: 90.23456789, 
-     *      endLat: 90.23456789, 
-     *      endLong: 90.23456789, 
+     *      startLat: 89,
+     *      startLong: 150, 
+     *      endLat: 89, 
+     *      endLong: 150,
      *      riderName: 'rider',
      *      driverName: 'driver',
      *      driverVehicle: 'car',
@@ -204,10 +204,10 @@ module.exports = (db) => {
      * [
      *   {
      *      rideId: 1,
-     *      startLat: 1.23456789,
-     *      startLong: 1.23456789, 
-     *      endLat: 1.23456789, 
-     *      endLong: 1.23456789, 
+     *      startLat: 89,
+     *      startLong: 150, 
+     *      endLat: 89, 
+     *      endLong: 150,
      *      riderName: 'rider',
      *      driverName: 'driver',
      *      driverVehicle: 'car',
@@ -279,10 +279,10 @@ module.exports = (db) => {
      * [
      *   {
      *      rideId: 1,
-     *      startLat: 1.23456789,
-     *      startLong: 1.23456789, 
-     *      endLat: 1.23456789, 
-     *      endLong: 1.23456789, 
+     *      startLat: 89,
+     *      startLong: 150, 
+     *      endLat: 89, 
+     *      endLong: 150,
      *      riderName: 'rider',
      *      driverName: 'driver',
      *      driverVehicle: 'car',
