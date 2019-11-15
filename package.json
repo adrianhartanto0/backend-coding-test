@@ -7,8 +7,8 @@
     "test": "tests"
   },
   "scripts": {
-    "doc:generate": "apidoc -i src",
-    "doc:deploy": "surge ./doc",
+    "doc:generate": "nps doc.generate",
+    "doc:deploy": "nps doc.deploy",
     "test": "mocha tests",
     "start": "node index.js"
   },
@@ -26,6 +26,8 @@
   "devDependencies": {
     "apidoc": "^0.18.0",
     "mocha": "^6.1.4",
+    "nps": "^5.9.8",
+    "nps-utils": "^1.7.0",
     "supertest": "^4.0.2"
   }
 }
