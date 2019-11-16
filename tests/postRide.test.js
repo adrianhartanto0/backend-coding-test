@@ -61,4 +61,55 @@ describe('POST /rides', () => {
         done();
       });
   });
+
+  it('If rider end latitude is invalid, response must contain correct error payload', (done) => {
+    const sampleInvalidLatitude = Chance.integer({ min: 100000, max: 150000 });
+    const sampleValidLongtitude = Chance.longitude({ fixed: 5 });
+    const sampleValidLatitude = Chance.latitude({ fixed: 5 });
+
+    const requestPayload = {
+      end_lat: sampleInvalidLatitude,
+      start_lat: sampleValidLatitude,
+      start_long: sampleValidLongtitude,
+    };
+
+    request(app)
+      .post('/rides')
+      .send(requestPayload)
+      .expect(200)
+      .then((response) => {
+        expect(response.body).to.have.property('error_code');
+        expect(response.body).to.have.property('message');
+        expect(response.body.error_code).to.equal('VALIDATION_ERROR');
+        expect(response.body.message).to.equal('End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively');
+        done();
+      });
+  });
+
+  it('If rider end longtitude is invalid, response must contain correct error payload', (done) => {
+    const sampleInvalidLongtitude = Chance.integer({ min: 100000, max: 150000 });
+    const sampleEndValidLatitude = Chance.latitude({ fixed: 5 });
+
+    const sampleValidStartLatitude = Chance.latitude({ fixed: 5 });
+    const sampleValidStartLongtitude = Chance.longitude({ fixed: 5 });
+
+    const requestPayload = {
+      end_long: sampleInvalidLongtitude,
+      end_lat: sampleEndValidLatitude,
+      start_lat: sampleValidStartLatitude,
+      start_long: sampleValidStartLongtitude,
+    };
+
+    request(app)
+      .post('/rides')
+      .send(requestPayload)
+      .expect(200)
+      .then((response) => {
+        expect(response.body).to.have.property('error_code');
+        expect(response.body).to.have.property('message');
+        expect(response.body.error_code).to.equal('VALIDATION_ERROR');
+        expect(response.body.message).to.equal('End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively');
+        done();
+      });
+  });
 });
