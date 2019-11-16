@@ -2,10 +2,10 @@ const logger = require('./winston');
 
 
 module.exports = {
-  logInfo: function(message) {
-    logger.info(message)
+  logInfo(message) {
+    logger.info(message);
   },
-  logError: function(message) {
-    logger.error(message)
-  }
+  logError(message) {
+    logger.error(message);
+  },
 };
