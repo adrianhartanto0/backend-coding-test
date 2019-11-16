@@ -171,5 +171,47 @@ describe('API tests', () => {
           done();
         });
     });
+
+    it('If rides data are available, response must contain the same amount of data and the same data', (done) => {
+      const randomId = Chance.integer({ min: 1, max: 100 });
+      const mockData = [];
+
+      mockData.push({
+        rideId: randomId,
+        startLat: Chance.latitude({ fixed: 5 }),
+        startong: Chance.longitude({ fixed: 5 }),
+        endLat: Chance.latitude({ fixed: 5 }),
+        startLong: Chance.longitude({ fixed: 5 }),
+        riderName: Chance.string({ length: 5 }),
+        driverName: Chance.string({ length: 5 }),
+        driverVehicle: Chance.string({ length: 5 }),
+        created: Chance.date(),
+      });
+
+      sinon.stub(db, 'all').yieldsRight(null, mockData);
+
+      request(app)
+        .get(`/rides/${randomId}`)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((response) => {
+          expect(response.body.length).to.be.equal(mockData.length);
+
+          const {
+            rideId, startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle,
+          } = response.body[0];
+
+          expect(rideId).to.equal(mockData[0].rideId);
+          expect(startLat).to.equal(mockData[0].startLat);
+          expect(startLong).to.equal(mockData[0].startLong);
+          expect(endLat).to.equal(mockData[0].endLat);
+          expect(endLong).to.equal(mockData[0].endLong);
+          expect(riderName).to.equal(mockData[0].riderName);
+          expect(driverName).to.equal(mockData[0].driverName);
+          expect(driverVehicle).to.equal(mockData[0].driverVehicle);
+
+          done();
+        });
+    });
   });
 });
