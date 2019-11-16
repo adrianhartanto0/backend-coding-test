@@ -1,0 +1,10 @@
+{
+  "name": "Backend Coding Test API Documentation",
+  "version": "0.0.1",
+  "description": "Documention describing Backend Test API endpoints",
+  "title": "Backend Coding Test API",
+  "url" : "/",
+  "template": {
+    "forceLanguage": "en"
+  }
+}

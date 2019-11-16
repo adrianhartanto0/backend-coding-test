@@ -2,6 +2,16 @@
 
 The goal of these exercises are to assess your proficiency in software engineering that is related to the daily work that we do at Xendit. Please follow the instructions below to complete the assessment.
 
+## API Documentation
+
+* To generate the documentation, run `npm run doc:generate`. All files of the documentation will be available in `/doc` folder
+
+* To deploy the documentation, run `npm run doc:deploy`. Since Surge.sh is being used to host the documentation, follow the steps outlined.
+    * If `Not Authorised` error ([bug](https://github.com/sintaxi/surge/issues/55)) occurs, re-run the command.
+    * To set deploy the documentation to a fixed URL
+        1. Follow the **Setting a CNAME** instructions in https://surge.sh/help/adding-a-custom-domain
+        2. Copy `.env.sample` to `.env` and set the URL in the `API_WEBSITE_URL` variable.
+
 ## Setup
 
 1. Create a new repository in your own github profile named `backend-coding-test` and commit the contents of this folder
