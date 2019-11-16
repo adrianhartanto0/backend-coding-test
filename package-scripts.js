@@ -17,7 +17,7 @@ module.exports = {
     },
     lint: {
       description: 'Run linting',
-      script: 'eslint ./src',
+      script: series('eslint src/', 'eslint tests/'),
     },
     test: {
       description: 'Run Test',
