@@ -134,5 +134,23 @@ describe('API tests', () => {
         .get(`/rides/${randomId}`)
         .expect(200, done);
     });
+
+    it('If an error occurs retrieving ride data, response must contain corrent payload', (done) => {
+      sinon.stub(db, 'all').yieldsRight(new Error('error'));
+      const randomId = Chance.integer({ min: 1, max: 100 });
+
+      request(app)
+        .get(`/rides/${randomId}`)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((response) => {
+          expect(Object.keys(response.body).length).to.be.equal(2);
+          expect(response.body).to.have.property('error_code');
+          expect(response.body).to.have.property('message');
+          expect(response.body.error_code).to.equal('SERVER_ERROR');
+          expect(response.body.message).to.equal('Unknown error');
+          done();
+        });
+    });
   });
 });
