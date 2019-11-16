@@ -9,6 +9,7 @@
   "scripts": {
     "doc:generate": "nps doc.generate",
     "doc:deploy": "nps doc.deploy",
+    "coverage": "nps coverage.run",
     "test": "mocha tests",
     "start": "node index.js"
   },
@@ -32,6 +33,7 @@
     "mocha": "^6.1.4",
     "nps": "^5.9.8",
     "nps-utils": "^1.7.0",
+    "nyc": "^14.1.1",
     "supertest": "^4.0.2"
   }
 }
