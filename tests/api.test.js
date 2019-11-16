@@ -27,4 +27,12 @@ describe('API tests', () => {
         .expect(200, done);
     });
   });
+
+  describe('GET /rides', () => {
+    it('Endpoint should be available', (done) => {
+      request(app)
+        .get('/rides')
+        .expect(200, done);
+    });
+  });
 });
