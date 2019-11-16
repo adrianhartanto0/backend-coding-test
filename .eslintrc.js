@@ -3,9 +3,11 @@ module.exports = {
     browser: true,
     commonjs: true,
     es6: true,
+    mocha: true
   },
   extends: [
     'airbnb-base',
+    
   ],
   globals: {
     Atomics: 'readonly',
