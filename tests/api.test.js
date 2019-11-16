@@ -2,6 +2,7 @@
 const request = require('supertest');
 const sinon = require('sinon');
 const { expect } = require('chai');
+const Chance = require('chance')();
 const sqlite3 = require('sqlite3').verbose();
 const buildSchemas = require('../src/schemas');
 
@@ -74,6 +75,52 @@ describe('API tests', () => {
           expect(response.body).to.have.property('message');
           expect(response.body.error_code).to.equal('RIDES_NOT_FOUND_ERROR');
           expect(response.body.message).to.equal('Could not find any rides');
+          done();
+        });
+    });
+
+    it('If rides data are available, response must contain the same amount of data and the same data', (done) => {
+      const mockDBDataCount = Chance.integer({ min: 1, max: 100 });
+      const mockData = [];
+
+      for (let i = 0; i < mockDBDataCount; i += 1) {
+        mockData.push({
+          rideId: i,
+          startLat: Chance.latitude({ fixed: 5 }),
+          startong: Chance.longitude({ fixed: 5 }),
+          endLat: Chance.latitude({ fixed: 5 }),
+          startLong: Chance.longitude({ fixed: 5 }),
+          riderName: Chance.string({ length: 5 }),
+          driverName: Chance.string({ length: 5 }),
+          driverVehicle: Chance.string({ length: 5 }),
+          created: Chance.date(),
+        });
+      }
+
+      sinon.stub(db, 'all').yieldsRight(null, mockData);
+
+      request(app)
+        .get('/rides')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((response) => {
+          expect(response.body.length).to.be.equal(mockData.length);
+
+          for (let i = 0; i < response.body.length; i += 1) {
+            const {
+              rideId, startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle,
+            } = response.body[i];
+
+            expect(rideId).to.equal(mockData[i].rideId);
+            expect(startLat).to.equal(mockData[i].startLat);
+            expect(startLong).to.equal(mockData[i].startLong);
+            expect(endLat).to.equal(mockData[i].endLat);
+            expect(endLong).to.equal(mockData[i].endLong);
+            expect(riderName).to.equal(mockData[i].riderName);
+            expect(driverName).to.equal(mockData[i].driverName);
+            expect(driverVehicle).to.equal(mockData[i].driverVehicle);
+          }
+
           done();
         });
     });
