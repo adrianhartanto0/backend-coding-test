@@ -9,22 +9,22 @@ const logger = createLogger({
         format.colorize(),
         format.timestamp(),
         format.simple(),
-        format.printf(info => `${info.timestamp} [${info.level}]: ${info.message}`),
+        format.printf((info) => `${info.timestamp} [${info.level}]: ${info.message}`),
       ),
     }),
-    new transports.File({ 
+    new transports.File({
       filename: './log/combined.log',
       level: 'debug',
       format: format.combine(
         format.timestamp({
           format: 'YYYY-MM-DD HH:mm:ss',
         }),
-        format.json()
+        format.json(),
       ),
     }),
   ],
   exceptionHandlers: [
-    new transports.File({ filename: './log/exceptions.log' })
+    new transports.File({ filename: './log/exceptions.log' }),
   ],
 });
 
