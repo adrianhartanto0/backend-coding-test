@@ -48,7 +48,7 @@ describe('POST /rides', () => {
 
   it('If rider start longtitude & latitude is valid, response must contain correct payload', (done) => {
     const sampleValidLongtitude = Chance.longitude({ fixed: 5 });
-    const sampleValidLatitude = Chance.longitude({ fixed: 5 });
+    const sampleValidLatitude = Chance.latitude({ fixed: 5 });
 
     request(app)
       .post('/rides')
