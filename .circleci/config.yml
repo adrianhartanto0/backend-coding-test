@@ -8,6 +8,8 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/node:9.0
+        environment:
+          API_WEBSITE_URL: ""
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
