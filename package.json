@@ -9,8 +9,7 @@
   "scripts": {
     "doc:generate": "nps doc.generate",
     "doc:deploy": "nps doc.deploy",
-    "coverage": "nps coverage.run",
-    "test": "mocha tests",
+    "test": "nps test",
     "start": "node index.js"
   },
   "keywords": [
@@ -39,7 +38,6 @@
     "supertest": "^4.0.2"
   },
   "pre-push": [
-    "npm run test",
-    "npm run coverage"
+    "npm test"
   ]
 }

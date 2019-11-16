@@ -12,8 +12,16 @@ module.exports = {
       description: 'Generate code coverage report',
       run: {
         description: 'Run code coverage along with test',
-        script: 'nyc --reporter=lcov --reporter=text npm test'
+        script: 'nyc --reporter=lcov --reporter=text mocha tests'
       }
+    },
+    lint: {
+      description: 'Run linting',
+      script: 'eslint ./src',
+    },
+    test: {
+      description: 'Run Test',
+      script: series('nps lint', 'nps coverage.run'),
     },
     doc: {
       description: 'Documenting the API.',
