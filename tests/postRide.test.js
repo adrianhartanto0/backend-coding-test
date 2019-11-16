@@ -35,7 +35,7 @@ describe('POST /rides', () => {
 
     request(app)
       .post('/rides')
-      .send({ start_lat: sampleInvalidLongtitude })
+      .send({ start_long: sampleInvalidLongtitude })
       .expect(200)
       .then((response) => {
         expect(response.body).to.have.property('error_code');
