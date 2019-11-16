@@ -152,5 +152,24 @@ describe('API tests', () => {
           done();
         });
     });
+
+    it('If no ride data are available, response must contain corrent payload', (done) => {
+      sinon.stub(db, 'all').yieldsRight(null, []);
+      const randomId = Chance.integer({ min: 1, max: 100 });
+
+      request(app)
+        .get(`/rides/${randomId}`)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((response) => {
+          /* eslint-disable no-console */
+          expect(Object.keys(response.body).length).to.be.equal(2);
+          expect(response.body).to.have.property('error_code');
+          expect(response.body).to.have.property('message');
+          expect(response.body.error_code).to.equal('RIDES_NOT_FOUND_ERROR');
+          expect(response.body.message).to.equal('Could not find any rides');
+          done();
+        });
+    });
   });
 });
