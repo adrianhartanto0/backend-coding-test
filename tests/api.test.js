@@ -21,6 +21,12 @@ describe('API tests', () => {
     });
   });
 
+  afterEach(() => {
+    if (db.all.restore) {
+      db.all.restore();
+    }
+  });
+
   describe('GET /health', () => {
     it('should return health', (done) => {
       request(app)
@@ -50,6 +56,24 @@ describe('API tests', () => {
           expect(response.body).to.have.property('message');
           expect(response.body.error_code).to.equal('SERVER_ERROR');
           expect(response.body.message).to.equal('Unknown error');
+          done();
+        });
+    });
+
+    it('If no rides data are available, response must contain corrent payload', (done) => {
+      sinon.stub(db, 'all').yieldsRight(null, []);
+
+      request(app)
+        .get('/rides')
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((response) => {
+          /* eslint-disable no-console */
+          expect(Object.keys(response.body).length).to.be.equal(2);
+          expect(response.body).to.have.property('error_code');
+          expect(response.body).to.have.property('message');
+          expect(response.body.error_code).to.equal('RIDES_NOT_FOUND_ERROR');
+          expect(response.body.message).to.equal('Could not find any rides');
           done();
         });
     });
