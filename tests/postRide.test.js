@@ -298,4 +298,72 @@ describe('POST /rides', () => {
         done();
       });
   });
+
+  it('If driver vehicle is not of type string, response must contain correct error payload', (done) => {
+    const sampleValidLongtitude = Chance.longitude({ fixed: 5 });
+    const sampleEndValidLatitude = Chance.latitude({ fixed: 5 });
+
+    const sampleValidStartLatitude = Chance.latitude({ fixed: 5 });
+    const sampleValidStartLongtitude = Chance.longitude({ fixed: 5 });
+
+    const validRiderName = Chance.string({ length: 5 });
+    const validDriverName = Chance.string({ length: 5 });
+    const invalidDriverVehicle = Chance.integer();
+
+    const requestPayload = {
+      end_long: sampleValidLongtitude,
+      end_lat: sampleEndValidLatitude,
+      start_lat: sampleValidStartLatitude,
+      start_long: sampleValidStartLongtitude,
+      rider_name: validRiderName,
+      driver_name: validDriverName,
+      driver_vehicle: invalidDriverVehicle,
+    };
+
+    request(app)
+      .post('/rides')
+      .send(requestPayload)
+      .expect(200)
+      .then((response) => {
+        expect(response.body).to.have.property('error_code');
+        expect(response.body).to.have.property('message');
+        expect(response.body.error_code).to.equal('VALIDATION_ERROR');
+        expect(response.body.message).to.equal('Vehicle type must be a non empty string');
+        done();
+      });
+  });
+
+  it('If driver name is empty, response must contain correct error payload', (done) => {
+    const sampleValidLongtitude = Chance.longitude({ fixed: 5 });
+    const sampleEndValidLatitude = Chance.latitude({ fixed: 5 });
+
+    const sampleValidStartLatitude = Chance.latitude({ fixed: 5 });
+    const sampleValidStartLongtitude = Chance.longitude({ fixed: 5 });
+
+    const validRiderName = Chance.string({ length: 5 });
+    const validDriverName = Chance.string({ length: 5 });
+    const invalidDriverVehicle = '';
+
+    const requestPayload = {
+      end_long: sampleValidLongtitude,
+      end_lat: sampleEndValidLatitude,
+      start_lat: sampleValidStartLatitude,
+      start_long: sampleValidStartLongtitude,
+      rider_name: validRiderName,
+      driver_name: validDriverName,
+      driver_vehicle: invalidDriverVehicle,
+    };
+
+    request(app)
+      .post('/rides')
+      .send(requestPayload)
+      .expect(200)
+      .then((response) => {
+        expect(response.body).to.have.property('error_code');
+        expect(response.body).to.have.property('message');
+        expect(response.body.error_code).to.equal('VALIDATION_ERROR');
+        expect(response.body.message).to.equal('Vehicle type must be a non empty string');
+        done();
+      });
+  });
 });
