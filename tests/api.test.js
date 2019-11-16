@@ -125,4 +125,14 @@ describe('API tests', () => {
         });
     });
   });
+
+  describe('GET /rides/:id', () => {
+    it('Endpoint should be available', (done) => {
+      const randomId = Chance.integer({ min: 1, max: 100 });
+
+      request(app)
+        .get(`/rides/${randomId}`)
+        .expect(200, done);
+    });
+  });
 });
