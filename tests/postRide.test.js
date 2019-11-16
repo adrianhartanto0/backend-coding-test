@@ -45,4 +45,20 @@ describe('POST /rides', () => {
         done();
       });
   });
+
+  it('If rider start longtitude & latitude is valid, response must contain correct payload', (done) => {
+    const sampleValidLongtitude = Chance.longitude({ fixed: 5 });
+    const sampleValidLatitude = Chance.longitude({ fixed: 5 });
+
+    request(app)
+      .post('/rides')
+      .send({ start_lat: sampleValidLatitude, start_long: sampleValidLongtitude })
+      .expect(200)
+      .then((response) => {
+        expect(response.body).to.have.property('error_code');
+        expect(response.body).to.have.property('message');
+        expect(response.body.message).to.not.equal('Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively');
+        done();
+      });
+  });
 });
