@@ -366,4 +366,36 @@ describe('POST /rides', () => {
         done();
       });
   });
+
+  it('If driver vehicle is valid, response must contain correct payload', (done) => {
+    const sampleValidLongtitude = Chance.longitude({ fixed: 5 });
+    const sampleEndValidLatitude = Chance.latitude({ fixed: 5 });
+
+    const sampleValidStartLatitude = Chance.latitude({ fixed: 5 });
+    const sampleValidStartLongtitude = Chance.longitude({ fixed: 5 });
+
+    const validRiderName = Chance.string({ length: 5 });
+    const validDriverName = Chance.string({ length: 5 });
+    const validDriverVehicle = Chance.string({ length: 5 });
+
+    const requestPayload = {
+      end_long: sampleValidLongtitude,
+      end_lat: sampleEndValidLatitude,
+      start_lat: sampleValidStartLatitude,
+      start_long: sampleValidStartLongtitude,
+      rider_name: validRiderName,
+      driver_name: validDriverName,
+      driver_vehicle: validDriverVehicle,
+    };
+
+    request(app)
+      .post('/rides')
+      .send(requestPayload)
+      .expect(200)
+      .then((response) => {
+        expect(response.body).to.not.have.property('error_code');
+        expect(response.body).to.not.have.property('message');
+        done();
+      });
+  });
 });
