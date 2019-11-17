@@ -15,6 +15,10 @@ module.exports = {
         script: 'nyc --reporter=lcov --reporter=text mocha tests',
       },
     },
+    load: {
+      description: 'Run Load Testing',
+      script: series('forever start index.js', 'artillery run artillery.yml', 'forever stop index.js'),
+    },
     lint: {
       description: 'Run linting',
       script: series('eslint src/', 'eslint tests/'),
