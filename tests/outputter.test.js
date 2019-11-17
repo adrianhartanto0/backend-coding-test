@@ -6,6 +6,7 @@ const {
   outputServerError,
   outputRiderId,
   outputPage,
+  outputQty,
 } = require('../src/utils/outputter');
 
 describe('Outputter Test', () => {
@@ -89,6 +90,27 @@ describe('Outputter Test', () => {
     it('outputPage shall return correct object, if argument is valid', () => {
       const validArgument = Chance.integer({ min: 1 });
       const value = outputPage(validArgument);
+      expect(value).to.deep.equal({});
+    });
+  });
+
+  describe('outputQty Test', () => {
+    it('outputQty shall be of type function', () => {
+      expect(typeof outputQty).to.equal('function');
+    });
+
+    it('outputQty shall return correct object, if argument is invalid', () => {
+      const invalidArgument = Chance.integer({ min: -100, max: -1 });
+      const value = outputQty(invalidArgument);
+      expect(value).to.have.property('error_code');
+      expect(value).to.have.property('message');
+      expect(value.error_code).to.equal('VALIDATION_ERROR');
+      expect(value.message).to.equal('Value of qty must be a positive integer');
+    });
+
+    it('outputQty shall return correct object, if argument is valid', () => {
+      const validArgument = Chance.integer({ min: 1 });
+      const value = outputQty(validArgument);
       expect(value).to.deep.equal({});
     });
   });

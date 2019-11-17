@@ -37,4 +37,16 @@ module.exports = {
 
     return {};
   },
+
+  outputQty: (qty) => {
+    const currQty = parseInt(qty, 10);
+    if (Number.isNaN(currQty) || (!Number.isNaN(currQty) && currQty < 0)) {
+      return {
+        error_code: 'VALIDATION_ERROR',
+        message: 'Value of qty must be a positive integer',
+      };
+    }
+
+    return {};
+  },
 };
