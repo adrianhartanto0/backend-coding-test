@@ -2,12 +2,14 @@ const request = require('supertest');
 const Chance = require('chance')();
 const { expect } = require('chai');
 
-const sqlite3 = require('sqlite3').verbose();
-
-const db = new sqlite3.Database(':memory:');
-const app = require('../src/app')(db);
+let app;
 
 describe('POST /rides', () => {
+  before(() => {
+    /* eslint-disable global-require */
+    app = require('../src/app')();
+  });
+
   it('Endpoint should be available', (done) => {
     request(app)
       .post('/rides')

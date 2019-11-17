@@ -3,28 +3,43 @@ const request = require('supertest');
 const sinon = require('sinon');
 const { expect } = require('chai');
 const Chance = require('chance')();
-const sqlite3 = require('sqlite3').verbose();
 const buildSchemas = require('../src/schemas');
 
-const db = new sqlite3.Database(':memory:');
-const app = require('../src/app')(db);
+const utilsDB = require('../src/utils/db');
+
+let app;
 
 describe('API tests', () => {
+  let runAsyncStub;
+  let allAsyncStub;
+
   before((done) => {
-    db.serialize((err) => {
+    utilsDB.db.serialize((err) => {
       if (err) {
         return done(err);
       }
 
-      buildSchemas(db);
+      buildSchemas(utilsDB.db);
 
       return done();
     });
+
+    runAsyncStub = sinon.stub(utilsDB, 'runAsync');
+    allAsyncStub = sinon.stub(utilsDB, 'allAsync');
+    /* eslint-disable global-require */
+    app = require('../src/app')();
+  });
+
+  beforeEach(() => {
   });
 
   afterEach(() => {
-    if (db.all.restore) {
-      db.all.restore();
+    if (utilsDB.allAsync.restore) {
+      utilsDB.allAsync.restore();
+    }
+
+    if (utilsDB.runAsync.restore) {
+      utilsDB.runAsync.restore();
     }
   });
 
@@ -45,7 +60,7 @@ describe('API tests', () => {
     });
 
     it('If an error occurs retrieving rides, response must contain corrent payload', (done) => {
-      sinon.stub(db, 'all').yieldsRight(new Error('error'));
+      runAsyncStub.rejects(new Error());
 
       request(app)
         .get('/rides')
@@ -62,14 +77,13 @@ describe('API tests', () => {
     });
 
     it('If no rides data are available, response must contain corrent payload', (done) => {
-      sinon.stub(db, 'all').yieldsRight(null, []);
+      runAsyncStub.resolves([]);
 
       request(app)
         .get('/rides')
         .expect('Content-Type', /json/)
         .expect(200)
         .then((response) => {
-          /* eslint-disable no-console */
           expect(Object.keys(response.body).length).to.be.equal(2);
           expect(response.body).to.have.property('error_code');
           expect(response.body).to.have.property('message');
@@ -79,7 +93,7 @@ describe('API tests', () => {
         });
     });
 
-    it('If rides data are available, response must contain the same amount of data and the same data', (done) => {
+    it('If rides data are available and pagination was not provided, response must contain all ride data', (done) => {
       const mockDBDataCount = Chance.integer({ min: 1, max: 100 });
       const mockData = [];
 
@@ -97,7 +111,7 @@ describe('API tests', () => {
         });
       }
 
-      sinon.stub(db, 'all').yieldsRight(null, mockData);
+      runAsyncStub.resolves(mockData);
 
       request(app)
         .get('/rides')
@@ -213,7 +227,7 @@ describe('API tests', () => {
     });
 
     it('If an error occurs retrieving ride data, response must contain corrent payload', (done) => {
-      sinon.stub(db, 'all').yieldsRight(new Error('error'));
+      allAsyncStub.rejects(new Error('error'));
       const randomId = Chance.integer({ min: 1, max: 100 });
 
       request(app)
@@ -231,7 +245,7 @@ describe('API tests', () => {
     });
 
     it('If no ride data are available, response must contain corrent payload', (done) => {
-      sinon.stub(db, 'all').yieldsRight(null, []);
+      allAsyncStub.resolves([]);
       const randomId = Chance.integer({ min: 1, max: 100 });
 
       request(app)
@@ -239,7 +253,6 @@ describe('API tests', () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .then((response) => {
-          /* eslint-disable no-console */
           expect(Object.keys(response.body).length).to.be.equal(2);
           expect(response.body).to.have.property('error_code');
           expect(response.body).to.have.property('message');
@@ -265,7 +278,7 @@ describe('API tests', () => {
         created: Chance.date(),
       });
 
-      sinon.stub(db, 'all').yieldsRight(null, mockData);
+      allAsyncStub.resolves(mockData);
 
       request(app)
         .get(`/rides/${randomId}`)
