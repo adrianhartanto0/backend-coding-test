@@ -1,7 +1,11 @@
 const { expect } = require('chai');
 const Chance = require('chance')();
 
-const { outputRows, outputServerError } = require('../src/utils/outputter');
+const {
+  outputRows,
+  outputServerError,
+  outputRiderId,
+} = require('../src/utils/outputter');
 
 describe('Outputter Test', () => {
   describe('outputRows Test', () => {
@@ -43,6 +47,27 @@ describe('Outputter Test', () => {
       expect(value).to.have.property('message');
       expect(value.error_code).to.equal('SERVER_ERROR');
       expect(value.message).to.equal('Unknown error');
+    });
+  });
+
+  describe('outputRiderId Test', () => {
+    it('outputRiderId shall be of type function', () => {
+      expect(typeof outputRiderId).to.equal('function');
+    });
+
+    it('outputRiderId shall return correct object, if argument is invalid', () => {
+      const invalidArgument = Chance.integer({ min: -100, max: -1 });
+      const value = outputRiderId(invalidArgument);
+      expect(value).to.have.property('error_code');
+      expect(value).to.have.property('message');
+      expect(value.error_code).to.equal('VALIDATION_ERROR');
+      expect(value.message).to.equal('Rider Id must be positive integer');
+    });
+
+    it('outputRiderId shall return correct object, if argument is valid', () => {
+      const validArgument = Chance.integer({ min: 1 });
+      const value = outputRiderId(validArgument);
+      expect(value).to.deep.equal({});
     });
   });
 });

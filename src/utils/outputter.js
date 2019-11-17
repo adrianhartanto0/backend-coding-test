@@ -13,4 +13,16 @@ module.exports = {
     error_code: 'SERVER_ERROR',
     message: 'Unknown error',
   }),
+
+  outputRiderId: (id) => {
+    const riderId = parseInt(id, 10);
+    if (Number.isNaN(riderId) || (!Number.isNaN(riderId) && id < 0)) {
+      return {
+        error_code: 'VALIDATION_ERROR',
+        message: 'Rider Id must be positive integer',
+      };
+    }
+
+    return {};
+  },
 };
