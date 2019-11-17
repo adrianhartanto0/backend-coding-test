@@ -89,14 +89,19 @@ describe('API tests', () => {
               rideID, startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle,
             } = response.body[i];
 
-            expect(rideID).to.equal(mockData[i].rideID);
-            expect(startLat).to.equal(mockData[i].startLat);
-            expect(startLong).to.equal(mockData[i].startLong);
-            expect(endLat).to.equal(mockData[i].endLat);
-            expect(endLong).to.equal(mockData[i].endLong);
-            expect(riderName).to.equal(mockData[i].riderName);
-            expect(driverName).to.equal(mockData[i].driverName);
-            expect(driverVehicle).to.equal(mockData[i].driverVehicle);
+            let filteredData = mockData.filter((data) => data.rideID === rideID);
+
+            expect(filteredData.length).to.equal(1);
+            filteredData = filteredData.pop();
+
+            expect(rideID).to.equal(filteredData.rideID);
+            expect(startLat).to.equal(filteredData.startLat);
+            expect(startLong).to.equal(filteredData.startLong);
+            expect(endLat).to.equal(filteredData.endLat);
+            expect(endLong).to.equal(filteredData.endLong);
+            expect(riderName).to.equal(filteredData.riderName);
+            expect(driverName).to.equal(filteredData.driverName);
+            expect(driverVehicle).to.equal(filteredData.driverVehicle);
           }
         });
     });
