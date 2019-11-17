@@ -60,9 +60,6 @@ module.exports = {
 
   getRideById: async (req, res) => {
     try {
-      /* eslint-disable no-console */
-      // console.log(allAsync);
-
       const query = `SELECT * FROM Rides WHERE rideID='${req.params.id}'`;
       const rows = await utilsDB.allAsync(query);
       const value = outputRows(rows);
