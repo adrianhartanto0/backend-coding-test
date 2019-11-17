@@ -25,4 +25,16 @@ module.exports = {
 
     return {};
   },
+
+  outputPage: (page) => {
+    const currPage = parseInt(page, 10);
+    if (Number.isNaN(currPage) || (!Number.isNaN(currPage) && currPage < 0)) {
+      return {
+        error_code: 'VALIDATION_ERROR',
+        message: 'Value of page must be a positive integer',
+      };
+    }
+
+    return {};
+  },
 };
