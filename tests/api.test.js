@@ -145,15 +145,11 @@ describe('API tests', () => {
         .expect(200)
         .then((response) => {
           const payload = response.body;
-          expect(payload.length).to.be.equal(1);
-
-          payload.forEach((item) => {
-            expect(Object.keys(item).length).to.be.equal(2);
-            expect(item).to.have.property('error_code');
-            expect(item).to.have.property('message');
-            expect(item.error_code).to.equal('VALIDATION_ERROR');
-            expect(item.message).to.equal('Value of page must be a positive integer');
-          });
+          expect(Object.keys(payload).length).to.be.equal(2);
+          expect(payload).to.have.property('error_code');
+          expect(payload).to.have.property('message');
+          expect(payload.error_code).to.equal('VALIDATION_ERROR');
+          expect(payload.message).to.equal('Value of page must be a positive integer');
 
           done();
         });
@@ -171,16 +167,10 @@ describe('API tests', () => {
         .expect(200)
         .then((response) => {
           const payload = response.body;
-          expect(payload.length).to.be.equal(1);
-
-          payload.forEach((item) => {
-            expect(Object.keys(item).length).to.be.equal(2);
-            expect(item).to.have.property('error_code');
-            expect(item).to.have.property('message');
-            expect(item.error_code).to.equal('VALIDATION_ERROR');
-            expect(item.message).to.equal('Value of qty must be a positive integer');
-          });
-
+          expect(payload).to.have.property('error_code');
+          expect(payload).to.have.property('message');
+          expect(payload.error_code).to.equal('VALIDATION_ERROR');
+          expect(payload.message).to.equal('Value of qty must be a positive integer');
           done();
         });
     });
@@ -197,15 +187,10 @@ describe('API tests', () => {
         .expect(200)
         .then((response) => {
           const payload = response.body;
-          expect(payload.length).to.be.equal(2);
-
-          payload.forEach((item) => {
-            expect(Object.keys(item).length).to.be.equal(2);
-            expect(item).to.have.property('error_code');
-            expect(item).to.have.property('message');
-            expect(item.error_code).to.equal('VALIDATION_ERROR');
-          });
-
+          expect(Object.keys(payload).length).to.be.equal(2);
+          expect(payload).to.have.property('error_code');
+          expect(payload).to.have.property('message');
+          expect(payload.error_code).to.equal('VALIDATION_ERROR');
           done();
         });
     });

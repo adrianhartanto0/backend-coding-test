@@ -81,30 +81,10 @@ module.exports = {
 
     if (page && qty) {
       query = 'SELECT * FROM Rides LIMIT (?) OFFSET (?)';
-      const currPage = parseInt(page, 10);
       const pageQty = parseInt(qty, 10);
-      const errors = [];
-
-      if (Number.isNaN(currPage) || currPage <= 0) {
-        errors.push({
-          error_code: 'VALIDATION_ERROR',
-          message: 'Value of page must be a positive integer',
-        });
-      }
-
-      if (Number.isNaN(pageQty) || pageQty <= 0) {
-        errors.push({
-          error_code: 'VALIDATION_ERROR',
-          message: 'Value of qty must be a positive integer',
-        });
-      }
-
-      if (errors.length > 0) {
-        return res.send(errors);
-      }
-
+      const pageInt = parseInt(page, 10);
       values.push(pageQty);
-      values.push(((page - 1) * pageQty));
+      values.push(((pageInt - 1) * pageQty));
     } else {
       query = 'SELECT * FROM Rides';
     }
