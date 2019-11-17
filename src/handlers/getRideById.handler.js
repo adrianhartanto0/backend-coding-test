@@ -1,4 +1,5 @@
 const { allAsync } = require('../utils/db');
+const { outputRows } = require('../utils/outputter');
 
 module.exports = {
 
@@ -61,15 +62,8 @@ module.exports = {
     try {
       const query = `SELECT * FROM Rides WHERE rideID='${req.params.id}'`;
       const rows = await allAsync(query);
-
-      if (rows.length === 0) {
-        return res.send({
-          error_code: 'RIDES_NOT_FOUND_ERROR',
-          message: 'Could not find any rides',
-        });
-      }
-
-      return res.send(rows);
+      const value = outputRows(rows);
+      return res.send(rows.length === 0 ? value : rows);
     } catch (e) {
       return res.send({
         error_code: 'SERVER_ERROR',
