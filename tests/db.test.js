@@ -44,4 +44,18 @@ describe('DB tests', () => {
     await utilsDB.allAsync('', []);
     expect(dbAllStub.called).to.equal(true);
   });
+
+  it('if DB error occurs, runAsync must throw an error', async () => {
+    dbRunStub.yieldsRight(new Error());
+    let isThrowError;
+
+    try {
+      await utilsDB.runAsync('', []);
+      isThrowError = false;
+    } catch (e) {
+      isThrowError = true;
+    }
+
+    expect(isThrowError).to.equal(true);
+  });
 });
