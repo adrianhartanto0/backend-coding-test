@@ -78,4 +78,32 @@ module.exports = {
 
     return payload;
   },
+  outputEndLatLong: (lat, long) => {
+    const endLatitude = Number(lat);
+    const endLongitude = Number(long);
+    const error = {
+      error_code: 'VALIDATION_ERROR',
+      message: 'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively',
+    };
+
+    let payload = {};
+
+    if (Number.isNaN(endLatitude) || Number.isNaN(endLongitude)) {
+      payload = error;
+    }
+
+    if (!Number.isNaN(endLatitude)) {
+      if (endLatitude < -90 || endLatitude > 90) {
+        payload = error;
+      }
+    }
+
+    if (!Number.isNaN(endLongitude)) {
+      if (endLongitude < -180 || endLongitude > 180) {
+        payload = error;
+      }
+    }
+
+    return payload;
+  },
 };
