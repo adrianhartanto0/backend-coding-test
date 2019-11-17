@@ -10,7 +10,6 @@ const utilsDB = require('../src/utils/db');
 let app;
 
 describe('API tests', () => {
-  let runAsyncStub;
   let allAsyncStub;
 
   before((done) => {
@@ -24,7 +23,6 @@ describe('API tests', () => {
       return done();
     });
 
-    runAsyncStub = sinon.stub(utilsDB, 'runAsync');
     allAsyncStub = sinon.stub(utilsDB, 'allAsync');
     /* eslint-disable global-require */
     app = require('../src/app')();
@@ -36,10 +34,6 @@ describe('API tests', () => {
   afterEach(() => {
     if (utilsDB.allAsync.restore) {
       utilsDB.allAsync.restore();
-    }
-
-    if (utilsDB.runAsync.restore) {
-      utilsDB.runAsync.restore();
     }
   });
 
@@ -60,7 +54,7 @@ describe('API tests', () => {
     });
 
     it('If an error occurs retrieving rides, response must contain corrent payload', (done) => {
-      runAsyncStub.rejects(new Error());
+      allAsyncStub.rejects(new Error());
 
       request(app)
         .get('/rides')
@@ -77,7 +71,7 @@ describe('API tests', () => {
     });
 
     it('If no rides data are available, response must contain corrent payload', (done) => {
-      runAsyncStub.resolves([]);
+      allAsyncStub.resolves([]);
 
       request(app)
         .get('/rides')
@@ -111,7 +105,7 @@ describe('API tests', () => {
         });
       }
 
-      runAsyncStub.resolves(mockData);
+      allAsyncStub.resolves(mockData);
 
       request(app)
         .get('/rides')
