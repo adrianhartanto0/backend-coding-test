@@ -29,4 +29,14 @@ describe('DB tests', () => {
     await utilsDB.runAsync('', []);
     expect(dbRunStub.called).to.equal(true);
   });
+
+  it('allAsync must be of type function', () => {
+    expect(typeof utilsDB.allAsync).to.equal('function');
+  });
+
+  it('allAsync must call all function of db', async () => {
+    dbAllStub.yieldsRight();
+    await utilsDB.allAsync('', []);
+    expect(dbAllStub.called).to.equal(true);
+  });
 });
