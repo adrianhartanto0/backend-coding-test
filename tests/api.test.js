@@ -220,6 +220,24 @@ describe('API tests', () => {
         .expect(200, done);
     });
 
+    it('If invalid rider id is passed, response must contain error payload', (done) => {
+      allAsyncStub.rejects(new Error('error'));
+      const invalidId = Chance.string({ alpha: true });
+
+      request(app)
+        .get(`/rides/${invalidId}`)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((response) => {
+          expect(Object.keys(response.body).length).to.be.equal(2);
+          expect(response.body).to.have.property('error_code');
+          expect(response.body).to.have.property('message');
+          expect(response.body.error_code).to.equal('VALIDATION_ERROR');
+          expect(response.body.message).to.equal('Rider Id must be positive integer');
+          done();
+        });
+    });
+
     it('If an error occurs retrieving ride data, response must contain corrent payload', (done) => {
       allAsyncStub.rejects(new Error('error'));
       const randomId = Chance.integer({ min: 1, max: 100 });
