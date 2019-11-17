@@ -65,11 +65,11 @@ describe('Outputter Test', () => {
       expect(value).to.have.property('error_code');
       expect(value).to.have.property('message');
       expect(value.error_code).to.equal('VALIDATION_ERROR');
-      expect(value.message).to.equal('Rider Id must be positive integer');
+      expect(value.message).to.equal('Rider Id must be valid uuid');
     });
 
     it('outputRiderId shall return correct object, if argument is valid', () => {
-      const validArgument = Chance.integer({ min: 1 });
+      const validArgument = Chance.guid({ version: 4 });
       const value = outputRiderId(validArgument);
       expect(value).to.deep.equal({});
     });

@@ -1,3 +1,5 @@
+const validate = require('uuid-validate');
+
 module.exports = {
   outputRows: (rows) => {
     if (rows && rows.length === 0) {
@@ -15,11 +17,10 @@ module.exports = {
   }),
 
   outputRiderId: (id) => {
-    const riderId = parseInt(id, 10);
-    if (Number.isNaN(riderId) || (!Number.isNaN(riderId) && id < 0)) {
+    if (!validate(id, 4)) {
       return {
         error_code: 'VALIDATION_ERROR',
-        message: 'Rider Id must be positive integer',
+        message: 'Rider Id must be valid uuid',
       };
     }
 
