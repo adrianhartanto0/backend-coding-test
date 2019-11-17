@@ -3,28 +3,37 @@ const request = require('supertest');
 const sinon = require('sinon');
 const { expect } = require('chai');
 const Chance = require('chance')();
-const sqlite3 = require('sqlite3').verbose();
 const buildSchemas = require('../src/schemas');
 
-const db = new sqlite3.Database(':memory:');
-const app = require('../src/app')(db);
+const utilsDB = require('../src/utils/db');
+
+let app;
 
 describe('API tests', () => {
+  let allAsyncStub;
+
   before((done) => {
-    db.serialize((err) => {
+    utilsDB.db.serialize((err) => {
       if (err) {
         return done(err);
       }
 
-      buildSchemas(db);
+      buildSchemas(utilsDB.db);
 
       return done();
     });
+
+    allAsyncStub = sinon.stub(utilsDB, 'allAsync');
+    /* eslint-disable global-require */
+    app = require('../src/app')();
+  });
+
+  beforeEach(() => {
   });
 
   afterEach(() => {
-    if (db.all.restore) {
-      db.all.restore();
+    if (utilsDB.allAsync.restore) {
+      utilsDB.allAsync.restore();
     }
   });
 
@@ -45,7 +54,7 @@ describe('API tests', () => {
     });
 
     it('If an error occurs retrieving rides, response must contain corrent payload', (done) => {
-      sinon.stub(db, 'all').yieldsRight(new Error('error'));
+      allAsyncStub.rejects(new Error());
 
       request(app)
         .get('/rides')
@@ -62,14 +71,13 @@ describe('API tests', () => {
     });
 
     it('If no rides data are available, response must contain corrent payload', (done) => {
-      sinon.stub(db, 'all').yieldsRight(null, []);
+      allAsyncStub.resolves([]);
 
       request(app)
         .get('/rides')
         .expect('Content-Type', /json/)
         .expect(200)
         .then((response) => {
-          /* eslint-disable no-console */
           expect(Object.keys(response.body).length).to.be.equal(2);
           expect(response.body).to.have.property('error_code');
           expect(response.body).to.have.property('message');
@@ -79,7 +87,7 @@ describe('API tests', () => {
         });
     });
 
-    it('If rides data are available, response must contain the same amount of data and the same data', (done) => {
+    it('If rides data are available and pagination was not provided, response must contain all ride data', (done) => {
       const mockDBDataCount = Chance.integer({ min: 1, max: 100 });
       const mockData = [];
 
@@ -97,7 +105,7 @@ describe('API tests', () => {
         });
       }
 
-      sinon.stub(db, 'all').yieldsRight(null, mockData);
+      allAsyncStub.resolves(mockData);
 
       request(app)
         .get('/rides')
@@ -137,15 +145,11 @@ describe('API tests', () => {
         .expect(200)
         .then((response) => {
           const payload = response.body;
-          expect(payload.length).to.be.equal(1);
-
-          payload.forEach((item) => {
-            expect(Object.keys(item).length).to.be.equal(2);
-            expect(item).to.have.property('error_code');
-            expect(item).to.have.property('message');
-            expect(item.error_code).to.equal('VALIDATION_ERROR');
-            expect(item.message).to.equal('Value of page must be a positive integer');
-          });
+          expect(Object.keys(payload).length).to.be.equal(2);
+          expect(payload).to.have.property('error_code');
+          expect(payload).to.have.property('message');
+          expect(payload.error_code).to.equal('VALIDATION_ERROR');
+          expect(payload.message).to.equal('Value of page must be a positive integer');
 
           done();
         });
@@ -163,16 +167,10 @@ describe('API tests', () => {
         .expect(200)
         .then((response) => {
           const payload = response.body;
-          expect(payload.length).to.be.equal(1);
-
-          payload.forEach((item) => {
-            expect(Object.keys(item).length).to.be.equal(2);
-            expect(item).to.have.property('error_code');
-            expect(item).to.have.property('message');
-            expect(item.error_code).to.equal('VALIDATION_ERROR');
-            expect(item.message).to.equal('Value of qty must be a positive integer');
-          });
-
+          expect(payload).to.have.property('error_code');
+          expect(payload).to.have.property('message');
+          expect(payload.error_code).to.equal('VALIDATION_ERROR');
+          expect(payload.message).to.equal('Value of qty must be a positive integer');
           done();
         });
     });
@@ -189,15 +187,10 @@ describe('API tests', () => {
         .expect(200)
         .then((response) => {
           const payload = response.body;
-          expect(payload.length).to.be.equal(2);
-
-          payload.forEach((item) => {
-            expect(Object.keys(item).length).to.be.equal(2);
-            expect(item).to.have.property('error_code');
-            expect(item).to.have.property('message');
-            expect(item.error_code).to.equal('VALIDATION_ERROR');
-          });
-
+          expect(Object.keys(payload).length).to.be.equal(2);
+          expect(payload).to.have.property('error_code');
+          expect(payload).to.have.property('message');
+          expect(payload.error_code).to.equal('VALIDATION_ERROR');
           done();
         });
     });
@@ -212,8 +205,26 @@ describe('API tests', () => {
         .expect(200, done);
     });
 
+    it('If invalid rider id is passed, response must contain error payload', (done) => {
+      allAsyncStub.rejects(new Error('error'));
+      const invalidId = Chance.string({ alpha: true });
+
+      request(app)
+        .get(`/rides/${invalidId}`)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((response) => {
+          expect(Object.keys(response.body).length).to.be.equal(2);
+          expect(response.body).to.have.property('error_code');
+          expect(response.body).to.have.property('message');
+          expect(response.body.error_code).to.equal('VALIDATION_ERROR');
+          expect(response.body.message).to.equal('Rider Id must be positive integer');
+          done();
+        });
+    });
+
     it('If an error occurs retrieving ride data, response must contain corrent payload', (done) => {
-      sinon.stub(db, 'all').yieldsRight(new Error('error'));
+      allAsyncStub.rejects(new Error('error'));
       const randomId = Chance.integer({ min: 1, max: 100 });
 
       request(app)
@@ -231,7 +242,7 @@ describe('API tests', () => {
     });
 
     it('If no ride data are available, response must contain corrent payload', (done) => {
-      sinon.stub(db, 'all').yieldsRight(null, []);
+      allAsyncStub.resolves([]);
       const randomId = Chance.integer({ min: 1, max: 100 });
 
       request(app)
@@ -239,7 +250,6 @@ describe('API tests', () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .then((response) => {
-          /* eslint-disable no-console */
           expect(Object.keys(response.body).length).to.be.equal(2);
           expect(response.body).to.have.property('error_code');
           expect(response.body).to.have.property('message');
@@ -265,7 +275,7 @@ describe('API tests', () => {
         created: Chance.date(),
       });
 
-      sinon.stub(db, 'all').yieldsRight(null, mockData);
+      allAsyncStub.resolves(mockData);
 
       request(app)
         .get(`/rides/${randomId}`)
