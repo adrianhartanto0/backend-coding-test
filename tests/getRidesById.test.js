@@ -103,8 +103,6 @@ describe('API tests', () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .then((response) => {
-          /* eslint-disable no-console */
-          console.log(response.body);
           expect(response.body.length).to.be.equal(mockData.length);
 
           const {
