@@ -3,6 +3,7 @@ const request = require('supertest');
 const sinon = require('sinon');
 const { expect } = require('chai');
 const Chance = require('chance')();
+const uuid = require('uuid/v4');
 
 const app = require('../src/app')();
 const utilsDB = require('../src/utils/db');
@@ -53,27 +54,30 @@ describe('API tests', () => {
         });
     });
 
-    it('If rides data are available and pagination was not provided, response must contain all ride data', (done) => {
+    it('If rides data are available and pagination was not provided, response must contain all ride data', async () => {
       const mockDBDataCount = Chance.integer({ min: 1, max: 100 });
       const mockData = [];
 
       for (let i = 0; i < mockDBDataCount; i += 1) {
         mockData.push({
-          rideId: i,
+          rideID: uuid(),
           startLat: Chance.latitude({ fixed: 5 }),
-          startong: Chance.longitude({ fixed: 5 }),
-          endLat: Chance.latitude({ fixed: 5 }),
           startLong: Chance.longitude({ fixed: 5 }),
+          endLat: Chance.latitude({ fixed: 5 }),
+          endLong: Chance.longitude({ fixed: 5 }),
           riderName: Chance.string({ length: 5 }),
           driverName: Chance.string({ length: 5 }),
           driverVehicle: Chance.string({ length: 5 }),
-          created: Chance.date(),
         });
       }
 
-      sinon.stub(utilsDB, 'allAsync').resolves(mockData);
+      const insertQuery = 'INSERT INTO Rides(rideID, startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 
-      request(app)
+      await Promise.all(mockData.map(
+        (data) => utilsDB.runAsync(insertQuery, Object.values(data)),
+      ));
+
+      return request(app)
         .get('/rides')
         .expect('Content-Type', /json/)
         .expect(200)
@@ -82,20 +86,23 @@ describe('API tests', () => {
 
           for (let i = 0; i < response.body.length; i += 1) {
             const {
-              rideId, startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle,
+              rideID, startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle,
             } = response.body[i];
 
-            expect(rideId).to.equal(mockData[i].rideId);
-            expect(startLat).to.equal(mockData[i].startLat);
-            expect(startLong).to.equal(mockData[i].startLong);
-            expect(endLat).to.equal(mockData[i].endLat);
-            expect(endLong).to.equal(mockData[i].endLong);
-            expect(riderName).to.equal(mockData[i].riderName);
-            expect(driverName).to.equal(mockData[i].driverName);
-            expect(driverVehicle).to.equal(mockData[i].driverVehicle);
-          }
+            let filteredData = mockData.filter((data) => data.rideID === rideID);
 
-          done();
+            expect(filteredData.length).to.equal(1);
+            filteredData = filteredData.pop();
+
+            expect(rideID).to.equal(filteredData.rideID);
+            expect(startLat).to.equal(filteredData.startLat);
+            expect(startLong).to.equal(filteredData.startLong);
+            expect(endLat).to.equal(filteredData.endLat);
+            expect(endLong).to.equal(filteredData.endLong);
+            expect(riderName).to.equal(filteredData.riderName);
+            expect(driverName).to.equal(filteredData.driverName);
+            expect(driverVehicle).to.equal(filteredData.driverVehicle);
+          }
         });
     });
 

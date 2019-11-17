@@ -4,7 +4,7 @@ const { series } = require('nps-utils');
 
 const surgeCommand = process.env.API_WEBSITE_URL.length !== 0
   ? `surge ./doc -d ${process.env.API_WEBSITE_URL}`
-  : 'surge ./doc';
+  : 'surge ./doc -d backend-api-test.surge.sh';
 
 module.exports = {
   scripts: {

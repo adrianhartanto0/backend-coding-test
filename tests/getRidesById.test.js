@@ -15,6 +15,7 @@ describe('API tests', () => {
         utilsDB.allAsync.restore();
       }
     });
+
     it('Endpoint should be available', (done) => {
       const randomId = Chance.guid({ version: 4 });
 
