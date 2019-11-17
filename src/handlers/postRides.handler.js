@@ -39,7 +39,7 @@ module.exports = {
    *
    * [
    *   {
-   *      rideId: 1,
+   *      rideID: '006ad6c8-12d5-4d28-b24b-1fa66e8b746a',
    *      startLat: 89,
    *      startLong: 150,
    *      endLat: 89,
