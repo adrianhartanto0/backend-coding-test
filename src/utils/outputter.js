@@ -64,11 +64,14 @@ module.exports = {
       payload = error;
     }
 
-    if (Number.isNaN(startLatitude) && Number.isNaN(startLongitude)) {
-      const isInvalidStartLatitude = startLatitude < -90 || startLatitude > 90;
-      const isInvalidStartLongtitude = startLongitude < -180 || startLongitude > 180;
+    if (!Number.isNaN(startLatitude)) {
+      if (startLatitude < -90 || startLatitude > 90) {
+        payload = error;
+      }
+    }
 
-      if (isInvalidStartLatitude || isInvalidStartLongtitude) {
+    if (!Number.isNaN(startLongitude)) {
+      if (startLongitude < -180 || startLongitude > 180) {
         payload = error;
       }
     }
