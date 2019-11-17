@@ -169,7 +169,7 @@ module.exports = (db) => {
 
     const insertQuery = 'INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
-    return db.run(insertQuery, values, (err) => {
+    return db.run(insertQuery, values, function callback(err) {
       if (err) {
         return res.send({
           error_code: 'SERVER_ERROR',
