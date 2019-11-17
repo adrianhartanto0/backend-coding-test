@@ -2,8 +2,6 @@ const sqlite3 = require('sqlite3').verbose();
 
 const db = new sqlite3.Database(':memory:');
 
-/* eslint-disable no-console */
-
 module.exports = {
   allAsync: (query, params) => (
     new Promise((resolve, reject) => {
