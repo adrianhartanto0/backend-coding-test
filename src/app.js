@@ -197,6 +197,9 @@ module.exports = (db) => {
      * @apiName Get Rides
      * @apiGroup Ride
      *
+     * @apiParam {Integer} [page] Page
+     * @apiParam {Integer} [qty] Number of rides data per page
+     *
      * @apiSuccess {Object[]} rides List of Rides
      * @apiSuccess {Number} rides.rideID Unique Rider ID
      * @apiSuccess {Number} rides.startLat Ride Origin Latitude
@@ -239,6 +242,19 @@ module.exports = (db) => {
      *  {
      *    error_code: 'RIDES_NOT_FOUND_ERROR',
      *    message: 'Could not find any rides'
+     *  }
+     *
+     *  @apiErrorExample Invalid page
+     *
+     *  {
+     *    error_code: 'VALIDATION_ERROR',
+     *    message: 'Value of page must be a positive integer'
+     *  }
+     *  @apiErrorExample Invalid qty
+     *
+     *  {
+     *    error_code: 'VALIDATION_ERROR',
+     *    message: 'Value of qty must be a positive integer'
      *  }
      *
      */
