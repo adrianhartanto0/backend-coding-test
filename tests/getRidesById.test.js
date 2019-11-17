@@ -117,5 +117,65 @@ describe('API tests', () => {
           done();
         });
     });
+
+    it('If rider id is in the form of unsanitized string, response must only contain payload of the sanitized version if valid', async () => {
+      const dataCount = Chance.integer({ min: 1, max: 100 });
+      const invalidInt = Chance.integer({ min: 1, max: dataCount - 1 });
+      const randomInvalidId = `${invalidInt}'`;
+      const mockData = [];
+
+      for (let i = 0; i < dataCount; i += 1) {
+        mockData.push({
+          rideID: i,
+          startLat: Chance.latitude({ fixed: 5 }),
+          startLong: Chance.longitude({ fixed: 5 }),
+          endLat: Chance.latitude({ fixed: 5 }),
+          endLong: Chance.longitude({ fixed: 5 }),
+          riderName: Chance.string({ length: 5 }),
+          driverName: Chance.string({ length: 5 }),
+          driverVehicle: Chance.string({ length: 5 }),
+        });
+      }
+
+      const insertQuery = 'INSERT INTO Rides(rideID, startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+
+      await Promise.all(mockData.map(
+        (data) => utilsDB.runAsync(insertQuery, Object.values(data)),
+      ));
+
+      return request(app)
+        .get(`/rides/${randomInvalidId}`)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((response) => {
+          /* eslint-disable no-console */
+          expect(response.body.length).to.be.equal(1);
+
+          const {
+            rideID,
+            startLat,
+            startLong,
+            endLat,
+            endLong,
+            riderName,
+            driverName,
+            driverVehicle,
+          } = response.body.pop();
+
+          let filteredData = mockData.filter((data) => data.rideID === rideID);
+
+          expect(filteredData.length).to.be.equal(1);
+          expect(rideID).to.equal(invalidInt);
+
+          filteredData = filteredData.pop();
+          expect(startLat).to.equal(filteredData.startLat);
+          expect(startLong).to.equal(filteredData.startLong);
+          expect(endLat).to.equal(filteredData.endLat);
+          expect(endLong).to.equal(filteredData.endLong);
+          expect(riderName).to.equal(filteredData.riderName);
+          expect(driverName).to.equal(filteredData.driverName);
+          expect(driverVehicle).to.equal(filteredData.driverVehicle);
+        });
+    });
   });
 });
