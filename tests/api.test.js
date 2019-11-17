@@ -124,6 +124,83 @@ describe('API tests', () => {
           done();
         });
     });
+
+    it('If invalid page pagination was given, response must contain correct error payload', (done) => {
+      const invalidPagePagination = Chance.string({ alpha: true });
+      const validQtyPagination = Chance.integer({ min: 1 });
+
+      request(app)
+        .get('/rides')
+        .query({ page: invalidPagePagination })
+        .query({ qty: validQtyPagination })
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((response) => {
+          const payload = response.body;
+          expect(payload.length).to.be.equal(1);
+
+          payload.forEach((item) => {
+            expect(Object.keys(item).length).to.be.equal(2);
+            expect(item).to.have.property('error_code');
+            expect(item).to.have.property('message');
+            expect(item.error_code).to.equal('VALIDATION_ERROR');
+            expect(item.message).to.equal('Value of page must be a positive integer');
+          });
+
+          done();
+        });
+    });
+
+    it('If invalid qty pagination was given, response must contain correct error payload', (done) => {
+      const validPagePagination = Chance.integer({ min: 1 });
+      const invalidQtyPagination = Chance.string({ alpha: true });
+
+      request(app)
+        .get('/rides')
+        .query({ page: validPagePagination })
+        .query({ qty: invalidQtyPagination })
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((response) => {
+          const payload = response.body;
+          expect(payload.length).to.be.equal(1);
+
+          payload.forEach((item) => {
+            expect(Object.keys(item).length).to.be.equal(2);
+            expect(item).to.have.property('error_code');
+            expect(item).to.have.property('message');
+            expect(item.error_code).to.equal('VALIDATION_ERROR');
+            expect(item.message).to.equal('Value of qty must be a positive integer');
+          });
+
+          done();
+        });
+    });
+
+    it('If invalid page and qty pagination was given, response must contain correct error payload', (done) => {
+      const invalidPagePagination = Chance.string({ alpha: true });
+      const invalidQtyPagination = Chance.string({ alpha: true });
+
+      request(app)
+        .get('/rides')
+        .query({ page: invalidPagePagination })
+        .query({ qty: invalidQtyPagination })
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((response) => {
+          const payload = response.body;
+          expect(payload.length).to.be.equal(2);
+
+          payload.forEach((item) => {
+            expect(Object.keys(item).length).to.be.equal(2);
+            expect(item).to.have.property('error_code');
+            expect(item).to.have.property('message');
+            expect(item.error_code).to.equal('VALIDATION_ERROR');
+          });
+
+          done();
+        });
+    });
   });
 
   describe('GET /rides/:id', () => {
