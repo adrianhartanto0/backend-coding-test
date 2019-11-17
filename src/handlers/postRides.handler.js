@@ -1,5 +1,5 @@
 const { allAsync, runAsync } = require('../utils/db');
-
+const { outputServerError } = require('../utils/outputter');
 
 module.exports = {
 
@@ -142,10 +142,7 @@ module.exports = {
       const rows = await allAsync(getLastInsertedQuery, data.pop().id);
       return res.send(rows);
     } catch (e) {
-      return res.send({
-        error_code: 'SERVER_ERROR',
-        message: 'Unknown error',
-      });
+      return res.send(outputServerError());
     }
   },
 };

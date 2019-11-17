@@ -1,5 +1,5 @@
 const { allAsync } = require('../utils/db');
-const { outputRows } = require('../utils/outputter');
+const { outputRows, outputServerError } = require('../utils/outputter');
 
 
 module.exports = {
@@ -94,10 +94,7 @@ module.exports = {
       const value = outputRows(rows);
       return res.send(rows.length === 0 ? value : rows);
     } catch (e) {
-      return res.send({
-        error_code: 'SERVER_ERROR',
-        message: 'Unknown error',
-      });
+      return res.send(outputServerError());
     }
   },
 };
