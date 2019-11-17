@@ -132,7 +132,7 @@ describe('Outputter Test', () => {
       expect(value.message).to.equal('Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively');
     });
 
-    it('outputQty shall return correct object, if argument is valid', () => {
+    it('outputStartLatLong shall return correct object, if argument is valid', () => {
       const validLatitude = Chance.latitude({ fixed: 5 });
       const validLongtitude = Chance.longitude({ fixed: 5 });
 
