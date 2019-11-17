@@ -3,6 +3,7 @@
 The goal of these exercises are to assess your proficiency in software engineering that is related to the daily work that we do at Xendit. Please follow the instructions below to complete the assessment.
 
 ## API Documentation
+* API Documentation is currently hosted in http://backend-api-test.surge.sh
 
 * To generate the documentation, run `npm run doc:generate`. All files of the documentation will be available in `/doc` folder
 
