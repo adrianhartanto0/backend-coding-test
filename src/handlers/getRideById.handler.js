@@ -1,4 +1,4 @@
-const { allAsync } = require('../utils/db');
+const utilsDB = require('../utils/db');
 const { outputRows, outputServerError } = require('../utils/outputter');
 
 module.exports = {
@@ -60,8 +60,11 @@ module.exports = {
 
   getRideById: async (req, res) => {
     try {
+      /* eslint-disable no-console */
+      // console.log(allAsync);
+
       const query = `SELECT * FROM Rides WHERE rideID='${req.params.id}'`;
-      const rows = await allAsync(query);
+      const rows = await utilsDB.allAsync(query);
       const value = outputRows(rows);
       return res.send(rows.length === 0 ? value : rows);
     } catch (e) {

@@ -1,4 +1,4 @@
-const { allAsync } = require('../utils/db');
+const utilsDB = require('../utils/db');
 const { outputRows, outputServerError } = require('../utils/outputter');
 
 
@@ -90,7 +90,10 @@ module.exports = {
     }
 
     try {
-      const rows = await allAsync(query, values);
+      /* eslint-disable no-console */
+      // console.log(utilsDB.allAsync);
+
+      const rows = await utilsDB.allAsync(query, values);
       const value = outputRows(rows);
       return res.send(rows.length === 0 ? value : rows);
     } catch (e) {
