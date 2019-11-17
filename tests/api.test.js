@@ -176,6 +176,31 @@ describe('API tests', () => {
           done();
         });
     });
+
+    it('If invalid page and qty pagination was given, response must contain correct error payload', (done) => {
+      const invalidPagePagination = Chance.string();
+      const invalidQtyPagination = Chance.string();
+
+      request(app)
+        .get('/rides')
+        .query({ page: invalidPagePagination })
+        .query({ qty: invalidQtyPagination })
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((response) => {
+          const payload = response.body;
+          expect(payload.length).to.be.equal(2);
+
+          payload.forEach((item) => {
+            expect(Object.keys(item).length).to.be.equal(2);
+            expect(item).to.have.property('error_code');
+            expect(item).to.have.property('message');
+            expect(item.error_code).to.equal('VALIDATION_ERROR');
+          });
+
+          done();
+        });
+    });
   });
 
   describe('GET /rides/:id', () => {
