@@ -9,7 +9,7 @@ The goal of these exercises are to assess your proficiency in software engineeri
 
 * To deploy the documentation, run `npm run doc:deploy`. Since Surge.sh is being used to host the documentation, follow the steps outlined.
     * If `Not Authorised` error ([bug](https://github.com/sintaxi/surge/issues/55)) occurs, re-run the command.
-    * To set deploy the documentation to a fixed URL
+    * To deploy the documentation to a custom URL
         1. Follow the **Setting a CNAME** instructions in https://surge.sh/help/adding-a-custom-domain
         2. Copy `.env.sample` to `.env` and set the URL in the `API_WEBSITE_URL` variable.
 
