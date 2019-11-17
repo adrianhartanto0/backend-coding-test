@@ -1,3 +1,5 @@
+const uuid = require('uuid/v4');
+
 const { allAsync, runAsync } = require('../utils/db');
 const { outputServerError } = require('../utils/outputter');
 
@@ -122,7 +124,10 @@ module.exports = {
       });
     }
 
+    const insertedUUID = uuid();
+
     const values = [
+      insertedUUID,
       req.body.start_lat,
       req.body.start_long,
       req.body.end_lat,
@@ -132,14 +137,12 @@ module.exports = {
       req.body.driver_vehicle,
     ];
 
-    const insertQuery = 'INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    const getLastIdQuery = 'SELECT last_insert_rowid() AS id';
+    const insertQuery = 'INSERT INTO Rides(rideID, startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
     const getLastInsertedQuery = 'SELECT * FROM Rides WHERE rideID = ?';
 
     try {
       await runAsync(insertQuery, values);
-      const data = await allAsync(getLastIdQuery);
-      const rows = await allAsync(getLastInsertedQuery, data.pop().id);
+      const rows = await allAsync(getLastInsertedQuery, insertedUUID);
       return res.send(rows);
     } catch (e) {
       return res.send(outputServerError());
