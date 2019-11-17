@@ -7,6 +7,7 @@ const {
   outputRiderId,
   outputPage,
   outputQty,
+  outputStartLatLong,
 } = require('../src/utils/outputter');
 
 describe('Outputter Test', () => {
@@ -111,6 +112,31 @@ describe('Outputter Test', () => {
     it('outputQty shall return correct object, if argument is valid', () => {
       const validArgument = Chance.integer({ min: 1 });
       const value = outputQty(validArgument);
+      expect(value).to.deep.equal({});
+    });
+  });
+
+  describe('outputStartLatLong Test', () => {
+    it('outputStartLatLong shall be of type function', () => {
+      expect(typeof outputStartLatLong).to.equal('function');
+    });
+
+    it('outputStartLatLong shall return correct object, if argument is invalid', () => {
+      const invalidLatitude = Chance.string({ alpha: true });
+      const invalidLongtitude = Chance.string({ alpha: true });
+
+      const value = outputStartLatLong(invalidLatitude, invalidLongtitude);
+      expect(value).to.have.property('error_code');
+      expect(value).to.have.property('message');
+      expect(value.error_code).to.equal('VALIDATION_ERROR');
+      expect(value.message).to.equal('Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively');
+    });
+
+    it('outputQty shall return correct object, if argument is valid', () => {
+      const validLatitude = Chance.latitude({ fixed: 5 });
+      const validLongtitude = Chance.longitude({ fixed: 5 });
+
+      const value = outputStartLatLong(validLatitude, validLongtitude);
       expect(value).to.deep.equal({});
     });
   });

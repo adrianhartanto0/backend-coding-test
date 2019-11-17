@@ -49,4 +49,30 @@ module.exports = {
 
     return {};
   },
+
+  outputStartLatLong: (lat, long) => {
+    const startLatitude = Number(lat);
+    const startLongitude = Number(long);
+    const error = {
+      error_code: 'VALIDATION_ERROR',
+      message: 'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively',
+    };
+
+    let payload = {};
+
+    if (Number.isNaN(startLatitude) || Number.isNaN(startLongitude)) {
+      payload = error;
+    }
+
+    if (Number.isNaN(startLatitude) && Number.isNaN(startLongitude)) {
+      const isInvalidStartLatitude = startLatitude < -90 || startLatitude > 90;
+      const isInvalidStartLongtitude = startLongitude < -180 || startLongitude > 180;
+
+      if (isInvalidStartLatitude || isInvalidStartLongtitude) {
+        payload = error;
+      }
+    }
+
+    return payload;
+  },
 };
