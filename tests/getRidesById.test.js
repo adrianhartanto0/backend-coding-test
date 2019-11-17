@@ -10,7 +10,6 @@ const utilsDB = require('../src/utils/db');
 describe('API tests', () => {
   describe('GET /rides/:id', () => {
     afterEach(() => {
-      /* eslint-disable no-console */
       if (utilsDB.allAsync.restore) {
         utilsDB.allAsync.restore();
       }
@@ -78,9 +77,6 @@ describe('API tests', () => {
     });
 
     it('If rides data are available, response must contain the same amount of data and the same data', (done) => {
-      /* eslint-disable no-console */
-      // console.log(allAsyncStub);
-
       const randomId = Chance.integer({ min: 1, max: 100 });
       const mockData = [];
 

@@ -90,9 +90,6 @@ module.exports = {
     }
 
     try {
-      /* eslint-disable no-console */
-      // console.log(utilsDB.allAsync);
-
       const rows = await utilsDB.allAsync(query, values);
       const value = outputRows(rows);
       return res.send(rows.length === 0 ? value : rows);
