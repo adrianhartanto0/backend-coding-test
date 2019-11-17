@@ -14,9 +14,14 @@ describe('DB tests', () => {
 
   after(() => {
     dbRunStub.restore();
+    dbAllStub.restore();
 
     if (utilsDB.db.run.restore) {
       utilsDB.db.run.restore();
+    }
+
+    if (utilsDB.db.all.restore) {
+      utilsDB.db.all.restore();
     }
   });
 
