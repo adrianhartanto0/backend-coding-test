@@ -1,5 +1,6 @@
 const { expect } = require('chai');
 const Chance = require('chance')();
+const uuid = require('uuid/v4');
 
 const {
   outputRows,
@@ -69,7 +70,7 @@ describe('Outputter Test', () => {
     });
 
     it('outputRiderId shall return correct object, if argument is valid', () => {
-      const validArgument = Chance.guid({ version: 4 });
+      const validArgument = uuid();
       const value = outputRiderId(validArgument);
       expect(value).to.deep.equal({});
     });
