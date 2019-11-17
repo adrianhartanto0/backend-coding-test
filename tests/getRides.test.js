@@ -10,7 +10,6 @@ const utilsDB = require('../src/utils/db');
 describe('API tests', () => {
   describe('GET /rides', () => {
     afterEach(() => {
-      /* eslint-disable no-console */
       if (utilsDB.allAsync.restore) {
         utilsDB.allAsync.restore();
       }
