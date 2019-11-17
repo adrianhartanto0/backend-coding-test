@@ -9,4 +9,8 @@ module.exports = {
 
     return {};
   },
+  outputServerError: () => ({
+    error_code: 'SERVER_ERROR',
+    message: 'Unknown error',
+  }),
 };
