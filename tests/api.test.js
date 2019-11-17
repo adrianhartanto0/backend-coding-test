@@ -126,7 +126,7 @@ describe('API tests', () => {
     });
 
     it('If invalid page pagination was given, response must contain correct error payload', (done) => {
-      const invalidPagePagination = Chance.string();
+      const invalidPagePagination = Chance.string({ alpha: true });
       const validQtyPagination = Chance.integer({ min: 1 });
 
       request(app)
@@ -151,9 +151,9 @@ describe('API tests', () => {
         });
     });
 
-    it('If valid qty pagination was given, response must contain correct error payload', (done) => {
+    it('If invalid qty pagination was given, response must contain correct error payload', (done) => {
       const validPagePagination = Chance.integer({ min: 1 });
-      const invalidQtyPagination = Chance.string();
+      const invalidQtyPagination = Chance.string({ alpha: true });
 
       request(app)
         .get('/rides')
@@ -178,8 +178,8 @@ describe('API tests', () => {
     });
 
     it('If invalid page and qty pagination was given, response must contain correct error payload', (done) => {
-      const invalidPagePagination = Chance.string();
-      const invalidQtyPagination = Chance.string();
+      const invalidPagePagination = Chance.string({ alpha: true });
+      const invalidQtyPagination = Chance.string({ alpha: true });
 
       request(app)
         .get('/rides')
