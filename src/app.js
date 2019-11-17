@@ -7,6 +7,7 @@ const { getStatus } = require('./handlers/status.handler');
 
 const { validateRiderId } = require('./middlewares/getRiderId.middleware');
 const { validatePage, validateQty, validateEmptyPagination } = require('./middlewares/getRiders.middleware');
+const { validateStartLatLong, validateEndLatLong } = require('./middlewares/postRides.middleware');
 
 const app = express();
 const jsonParser = bodyParser.json();
@@ -14,7 +15,7 @@ const jsonParser = bodyParser.json();
 module.exports = () => {
   app.get('/health', getStatus);
 
-  app.post('/rides', jsonParser, postRides);
+  app.post('/rides', [jsonParser, validateStartLatLong, validateEndLatLong], postRides);
 
   app.get('/rides', [validateEmptyPagination], getRides);
   app.get('/rides', [validatePage, validateQty], getRides);
