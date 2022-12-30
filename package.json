@@ -39,7 +39,7 @@
     "eslint-plugin-import": "^2.18.2",
     "forever": "^1.0.0",
     "husky": "^4.0.0-beta.5",
-    "mocha": "^6.1.4",
+    "mocha": "^10.2.0",
     "nps": "^5.9.8",
     "nyc": "^14.1.1",
     "sinon": "^7.5.0",
